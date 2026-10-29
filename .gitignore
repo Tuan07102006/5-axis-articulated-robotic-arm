@@ -21,3 +21,6 @@ CMakeCache.txt
 *.log
 *.tmp
 *.bak
+
+# Local IDE metadata
+.settings/
