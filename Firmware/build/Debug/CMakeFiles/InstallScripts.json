@@ -1,0 +1,8 @@
+{
+	"InstallScripts" : 
+	[
+		"D:/STM32_Projects/5-axis_articulated_robotic_arm/Firmware/build/Debug/cmake_install.cmake",
+		"D:/STM32_Projects/5-axis_articulated_robotic_arm/Firmware/build/Debug/cmake/stm32cubemx/cmake_install.cmake"
+	],
+	"Parallel" : false
+}
