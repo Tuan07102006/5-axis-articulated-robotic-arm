@@ -71,6 +71,7 @@ file(GLOB_RECURSE MODULE_HEADERS
 set(MODULE_INCLUDE_DIRS "")
 
 foreach(HEADER_FILE IN LISTS MODULE_HEADERS)
+
     get_filename_component(
         HEADER_DIR
         "${HEADER_FILE}"
@@ -78,6 +79,7 @@ foreach(HEADER_FILE IN LISTS MODULE_HEADERS)
     )
 
     list(APPEND MODULE_INCLUDE_DIRS "${HEADER_DIR}")
+
 endforeach()
 
 # Remove duplicate include directories
@@ -85,16 +87,20 @@ list(REMOVE_DUPLICATES MODULE_INCLUDE_DIRS)
 
 # Register module source files
 if(MODULE_SOURCES)
+
     target_sources(${CMAKE_PROJECT_NAME} PRIVATE
         ${MODULE_SOURCES}
     )
+
 endif()
 
 # Register module include directories
 if(MODULE_INCLUDE_DIRS)
+
     target_include_directories(${CMAKE_PROJECT_NAME} PRIVATE
         ${MODULE_INCLUDE_DIRS}
     )
+
 endif()
 
 # ------------------------------------------------------------
@@ -116,9 +122,17 @@ target_compile_definitions(${CMAKE_PROJECT_NAME} PRIVATE
 # Remove incorrect implicit dependency
 list(REMOVE_ITEM CMAKE_C_IMPLICIT_LINK_LIBRARIES ob)
 
-target_link_libraries(${CMAKE_PROJECT_NAME} PRIVATE
-    stm32cubemx
-)
+# IMPORTANT:
+# STM32CubeMX uses the plain signature of
+# target_link_libraries().
+#
+# Do not use PRIVATE/PUBLIC/INTERFACE here.
+#
+# The stm32cubemx library is already linked by
+# cmake/stm32cubemx/CMakeLists.txt.
+#
+# Additional libraries, if needed, must use
+# the same plain signature for this target.
 
 # ------------------------------------------------------------
 # 7. BUILD INFORMATION
@@ -132,12 +146,14 @@ message(STATUS "Module source files : ${MODULE_SOURCE_COUNT}")
 message(STATUS "Module include dirs : ${MODULE_INCLUDE_COUNT}")
 
 foreach(SOURCE_FILE IN LISTS MODULE_SOURCES)
+
     file(RELATIVE_PATH REL_SOURCE
         "${CMAKE_CURRENT_SOURCE_DIR}"
         "${SOURCE_FILE}"
     )
 
     message(STATUS "  [SOURCE] ${REL_SOURCE}")
+
 endforeach()
 
 message(STATUS "----------------------------------------")
@@ -151,12 +167,16 @@ find_program(ARM_SIZE_TOOL
 )
 
 if(ARM_SIZE_TOOL)
+
     add_custom_command(
         TARGET ${CMAKE_PROJECT_NAME}
         POST_BUILD
+
         COMMAND "${ARM_SIZE_TOOL}"
                 "$<TARGET_FILE:${CMAKE_PROJECT_NAME}>"
+
         COMMENT "Checking firmware memory usage"
         VERBATIM
     )
+
 endif()
