@@ -37,3 +37,4 @@
 25	107	8161574594760592	CMakeFiles/5-axis_articulated_robotic_arm.dir/Modules/Servo/Src/servo.c.obj	39d1d619b9fa9f39
 21	165	8161574594720597	CMakeFiles/5-axis_articulated_robotic_arm.dir/Core/Src/main.c.obj	eacf4aea9db840d2
 165	328	8161574596160727	5-axis_articulated_robotic_arm.elf	d46a6051353ed2a4
+2	24	8161577335379276	D:/STM32_Projects/5-axis_articulated_robotic_arm/Firmware/build/Debug/CMakeFiles/cmake.verify_globs	c0adcb02df8e8ea4
