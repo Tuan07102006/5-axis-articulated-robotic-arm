@@ -1,4 +1,5 @@
 #include "servo.h"
+#include "bsp_servo_pwm.h"
 #include <math.h>
 
 static float servo_angles[SERVO_COUNT];
@@ -18,20 +19,23 @@ void Servo_Init(void) {
 
 void Servo_SetAngle(uint8_t servo_id, float angle)
 {
-    if (servo_id >= SERVO_COUNT) {
+    if (servo_id >= SERVO_COUNT || !isfinite(angle)) {
         return;
     }
 
     float min_angle = servo_configs[servo_id].min_angle;
     float max_angle = servo_configs[servo_id].max_angle;
 
-    if (angle < min_angle) {
-        angle = min_angle;
-    }
-    else if (angle > max_angle) {
-        angle = max_angle;
+    if (angle < min_angle || angle > max_angle) {
+        return;
     }
 
+    uint16_t pulse_us = Servo_AngleToPulse(servo_id, angle);
+    if (pulse_us == 0U) {
+        return;
+    }
+
+    BSP_ServoPWM_SetPulse(servo_id, pulse_us);
     servo_angles[servo_id] = angle;
 }
 
@@ -113,3 +117,5 @@ uint16_t Servo_AngleToPulse(uint8_t servo_id, float angle)
 
     return (uint16_t)(pulse_width + 0.5f);
 }
+
+BSP_ServoPWM_SetPulse(uint8_t servo_id, uint16_t pulse_us)

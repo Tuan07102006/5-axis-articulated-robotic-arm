@@ -23,7 +23,8 @@
 
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
-
+#include "servo.h"
+#include "bsp_servo_pwm.h"
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -90,7 +91,9 @@ int main(void)
   MX_TIM3_Init();
   MX_TIM4_Init();
   /* USER CODE BEGIN 2 */
-
+  Servo_Init();
+  Servo_SetAngle(0U, 90.0f); 
+  BSP_ServoPWM_Start(0U);    
   /* USER CODE END 2 */
 
   /* Infinite loop */
@@ -98,7 +101,11 @@ int main(void)
   while (1)
   {
     /* USER CODE END WHILE */
+    Servo_SetAngle(0U, 90.0f);
+    HAL_Delay(2000U);
 
+    Servo_SetAngle(0U, 100.0f);
+    HAL_Delay(2000U);
     /* USER CODE BEGIN 3 */
   }
   /* USER CODE END 3 */
