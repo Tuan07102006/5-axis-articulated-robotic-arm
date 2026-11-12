@@ -92,8 +92,14 @@ int main(void)
   MX_TIM4_Init();
   /* USER CODE BEGIN 2 */
   Servo_Init();
-  Servo_SetAngle(0U, 90.0f); 
-  BSP_ServoPWM_Start(0U);    
+
+  if (Servo_SetAngle(0U, 90.0f) != SERVO_OK) {
+    Error_Handler();
+  }
+
+  if (BSP_ServoPWM_Start(0U) != BSP_SERVO_PWM_OK) {
+    Error_Handler();
+  }    
   /* USER CODE END 2 */
 
   /* Infinite loop */

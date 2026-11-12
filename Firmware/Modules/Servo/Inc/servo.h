@@ -5,7 +5,16 @@
 #define SERVO_COUNT 6U
 
 void Servo_Init(void);
-void Servo_SetAngle(uint8_t servo_id, float angle);
+
+typedef enum {
+    SERVO_OK = 0,
+    SERVO_INVALID_ID,
+    SERVO_INVALID_ANGLE,
+    SERVO_CONVERSION_ERROR,
+    SERVO_PWM_ERROR
+} Servo_Status;
+
+Servo_Status Servo_SetAngle(uint8_t servo_id, float angle);
 
 float Servo_GetAngle(uint8_t servo_id);
 

@@ -17,26 +17,30 @@ void Servo_Init(void) {
     }
 }
 
-void Servo_SetAngle(uint8_t servo_id, float angle)
+Servo_Status Servo_SetAngle(uint8_t servo_id, float angle)
 {
-    if (servo_id >= SERVO_COUNT || !isfinite(angle)) {
-        return;
+    if (servo_id >= SERVO_COUNT) {
+        return SERVO_INVALID_ID;
     }
 
     float min_angle = servo_configs[servo_id].min_angle;
     float max_angle = servo_configs[servo_id].max_angle;
 
-    if (angle < min_angle || angle > max_angle) {
-        return;
+    if (!isfinite(angle) || angle < min_angle || angle > max_angle) {
+        return SERVO_INVALID_ANGLE;
     }
 
     uint16_t pulse_us = Servo_AngleToPulse(servo_id, angle);
     if (pulse_us == 0U) {
-        return;
+        return SERVO_CONVERSION_ERROR;
     }
 
-    BSP_ServoPWM_SetPulse(servo_id, pulse_us);
+    if (BSP_ServoPWM_SetPulse(servo_id, pulse_us) != BSP_SERVO_PWM_OK) {
+        return SERVO_PWM_ERROR;
+    }
+
     servo_angles[servo_id] = angle;
+    return SERVO_OK;
 }
 
 float Servo_GetAngle(uint8_t servo_id)
@@ -118,4 +122,3 @@ uint16_t Servo_AngleToPulse(uint8_t servo_id, float angle)
     return (uint16_t)(pulse_width + 0.5f);
 }
 
-BSP_ServoPWM_SetPulse(uint8_t servo_id, uint16_t pulse_us)
